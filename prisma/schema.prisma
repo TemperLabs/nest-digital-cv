@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id          String             @id @default(uuid()) @db.Uuid
+  slug        String             @unique
+  name        String
+  description String
+  links       ProfessionalLink[]
+  skills      Skill[]
+  experience  Experience[]
+  projects    Project[]
+}
+
+model ProfessionalLink {
+  id        String  @id @default(uuid()) @db.Uuid
+  profileId String  @db.Uuid
+  label     String
+  url       String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+}
+
+model Skill {
+  id        String  @id @default(uuid()) @db.Uuid
+  profileId String  @db.Uuid
+  name      String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, name])
+}
+
+model Experience {
+  id           String        @id @default(uuid()) @db.Uuid
+  profileId    String        @db.Uuid
+  company      String
+  position     String
+  period       String
+  profile      Profile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  achievements Achievement[]
+
+  @@index([profileId])
+}
+
+model Achievement {
+  id           String     @id @default(uuid()) @db.Uuid
+  experienceId String     @db.Uuid
+  description  String
+  experience   Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  @@index([experienceId])
+}
+
+model Project {
+  id          String  @id @default(uuid()) @db.Uuid
+  profileId   String  @db.Uuid
+  name        String
+  description String?
+  url         String
+  profile     Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+}

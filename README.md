@@ -1,8 +1,14 @@
 # Nest Digital CV
 
-Минимальный API цифрового резюме: NestJS, GraphQL (code-first), TypeORM и PostgreSQL. Публичный запрос `profile(slug)` возвращает профиль, компании, проекты и навыки. Записывающего API и авторизации пока нет.
+Персональная цифровая визитка на NestJS, GraphQL, Prisma и PostgreSQL. Репозиторий пока в разработке: Docker, автоматический запуск миграций и проверка с чистого состояния ещё не готовы.
 
-## Запуск
+## Выбор модели данных
+
+Выбраны отдельные связанные модели `Profile`, `ProfessionalLink`, `Skill`, `Experience`, `Achievement` и `Project`. Один JSON-документ был бы короче, но затруднил бы ограничения целостности, выборку вложенных данных и редактирование отдельных элементов. Промежуточный вариант с JSON-массивами в строке профиля тоже проще по схеме, но скрыл бы связи и хуже показал бы работу Prisma. Здесь каждая повторяемая сущность хранится отдельно; `Achievement` привязана к конкретному месту работы. Подробнее об оптимизации GraphQL-запросов добавим на следующем этапе.
+
+Данные в `examples/resume.json` **вымышленные** и показывают формат, а не реальное резюме.
+
+## Локальный запуск (текущий этап)
 
 Требуются Node.js 20+ и PostgreSQL. Создайте пустую базу `digital_cv`, затем:
 
@@ -10,29 +16,26 @@
 npm install
 cp .env.example .env
 npm run db:migrate
-npm run cv:init -- --slug temper --input ./examples/resume.json
+npm run cv:init -- --slug demo --input ./examples/resume.json
 npm run db:migrate
 npm run dev
 ```
 
-Откройте `http://localhost:3000/graphql` и выполните:
+`cv:init` валидирует JSON и генерирует Prisma data migration в `prisma/migrations`. Перед коммитом проверьте файл: он содержит данные в открытом виде. Повторная генерация для того же slug блокируется; уникальность slug дополнительно проверяет база. Prisma не поддерживает автоматический `down` для миграций — откат данных потребует отдельной миграции.
+
+Пример запроса к `/graphql`:
 
 ```graphql
 query {
-  profile(slug: "temper") {
+  profile(slug: "demo") {
     name
-    about
-    companies { name period }
-    projects { name description url companyId }
+    description
+    links { label url }
     skills { name }
+    experience { company position period achievements { description } }
+    projects { name description url }
   }
 }
 ```
 
-## Данные и миграции
-
-`CreateCvTables` создаёт структуру. `cv:init` валидирует JSON и генерирует **отдельную data migration**, но не применяет её. Проверьте файл перед коммитом: он содержит данные резюме в открытом виде. Не включайте туда приватные контакты и секреты.
-
-Флаг `--slug` допускает строчные латинские буквы, цифры и дефисы. Повторная генерация для того же slug не перезаписывает файл; уникальность slug дополнительно защищена в БД. `down` удаляет созданный профиль и его дочерние записи через каскадный FK. Для персонального задания данные хранятся в миграции; в многопользовательском приложении профили следует создавать через авторизованный API.
-
-`npm run db:revert` откатывает последнюю применённую миграцию. Осторожно: откат data migration удаляет соответствующее резюме.
+Пока интерфейс `/graphql` настроен на GraphiQL. Apollo Sandbox будет подключён отдельно.

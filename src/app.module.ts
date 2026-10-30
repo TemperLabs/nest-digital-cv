@@ -4,6 +4,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'node:path';
 import { CvResolver } from './cv.resolver';
 import { CvService } from './cv.service';
+import { PrismaService } from './prisma.service';
 
 @Module({
   imports: [GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -11,6 +12,6 @@ import { CvService } from './cv.service';
     autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     graphiql: process.env.NODE_ENV !== 'production',
   })],
-  providers: [CvResolver, CvService],
+  providers: [CvResolver, CvService, PrismaService],
 })
 export class AppModule {}

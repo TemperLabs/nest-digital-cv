@@ -1,7 +1,23 @@
 {
-  "name": "Максим",
-  "about": "Разработчик приложений",
-  "companies": [{ "name": "Пример компании", "period": "2024–2026" }],
-  "projects": [{ "name": "Пример проекта", "description": "Описание проекта", "url": "https://example.com", "company": "Пример компании" }],
-  "skills": ["TypeScript", "PostgreSQL"]
+  "name": "Демо Разработчик",
+  "description": "Вымышленный пример профиля для демонстрации формата цифрового резюме.",
+  "links": [
+    { "label": "Портфолио", "url": "https://example.com/portfolio" }
+  ],
+  "skills": ["TypeScript", "NestJS", "Prisma", "PostgreSQL"],
+  "experience": [
+    {
+      "company": "Example Studio",
+      "position": "Backend Developer",
+      "period": "2024–2026",
+      "achievements": ["Разработал GraphQL API", "Оптимизировал запросы к базе данных"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Demo CV",
+      "description": "Учебный проект цифровой визитки",
+      "url": "https://example.com/projects/demo-cv"
+    }
+  ]
 }
