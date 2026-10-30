@@ -1,0 +1,35 @@
+{
+  "name": "nest-digital-cv",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/src/main.js",
+    "db:migrate": "typeorm-ts-node-commonjs -d src/data-source.ts migration:run",
+    "db:revert": "typeorm-ts-node-commonjs -d src/data-source.ts migration:revert",
+    "cv:init": "tsx scripts/cv-init.ts",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@apollo/server": "^5.5.1",
+    "@nestjs/apollo": "^13.1.1",
+    "@nestjs/common": "^11.1.0",
+    "@nestjs/core": "^11.1.0",
+    "@nestjs/graphql": "^13.1.0",
+    "@nestjs/platform-express": "^11.1.0",
+    "dotenv": "^17.0.0",
+    "graphql": "^16.11.0",
+    "pg": "^8.0.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.0",
+    "typeorm": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.0.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": { "node": ">=20" }
+}
