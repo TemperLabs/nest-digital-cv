@@ -9,10 +9,13 @@
     "db:migrate": "prisma migrate deploy",
     "cv:init": "tsx scripts/cv-init.ts",
     "check": "prisma generate && tsc --noEmit",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "start:ready": "npm run db:migrate && npm run start",
+    "dev:ready": "npm run db:migrate && npm run dev"
   },
   "dependencies": {
     "@apollo/server": "^5.5.1",
+    "@as-integrations/express5": "^1.1.2",
     "@nestjs/apollo": "^13.1.1",
     "@nestjs/common": "^11.1.0",
     "@nestjs/core": "^11.1.0",
@@ -21,12 +24,12 @@
     "@prisma/client": "^6.19.0",
     "dotenv": "^17.0.0",
     "graphql": "^16.11.0",
+    "prisma": "^6.19.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "prisma": "^6.19.0",
     "tsx": "^4.0.0",
     "typescript": "^5.9.0"
   },

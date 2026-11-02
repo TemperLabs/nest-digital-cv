@@ -1,23 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
-import { Profile } from './cv.resolver';
 
 @Injectable()
 export class CvService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getProfile(slug: string): Promise<Profile | null> {
-    return this.prisma.profile.findUnique({
-      where: { slug },
-      include: {
-        links: { orderBy: { label: 'asc' } },
-        skills: { orderBy: { name: 'asc' } },
-        experience: {
-          orderBy: { period: 'desc' },
-          include: { achievements: true },
-        },
-        projects: { orderBy: { name: 'asc' } },
-      },
+  getProfile(slug: string) {
+    return this.prisma.profile.findUnique({ where: { slug } });
+  }
+
+  getLinks(profileId: string) {
+    return this.prisma.professionalLink.findMany({ where: { profileId }, orderBy: { label: 'asc' } });
+  }
+
+  getSkills(profileId: string) {
+    return this.prisma.skill.findMany({ where: { profileId }, orderBy: { name: 'asc' } });
+  }
+
+  getExperience(profileId: string, withAchievements: boolean) {
+    return this.prisma.experience.findMany({
+      where: { profileId },
+      orderBy: { period: 'desc' },
+      include: { achievements: withAchievements },
     });
+  }
+
+  getProjects(profileId: string) {
+    return this.prisma.project.findMany({ where: { profileId }, orderBy: { name: 'asc' } });
   }
 }

@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+.git
+.gitignore
+README.md
+DEVELOPMENT_SPEC.md
+examples
+scripts
